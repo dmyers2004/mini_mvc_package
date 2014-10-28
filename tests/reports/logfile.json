@@ -1,0 +1,18 @@
+{
+    "event": "suiteStart",
+    "suite": "appTest",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "appTest",
+    "test": "appTest::test_app"
+}{
+    "event": "test",
+    "suite": "appTest",
+    "test": "appTest::test_app",
+    "status": "error",
+    "time": 0.00055408477783203,
+    "trace": [],
+    "message": "Serialization of 'Closure' is not allowed",
+    "output": ""
+}
