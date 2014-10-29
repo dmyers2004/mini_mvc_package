@@ -26,11 +26,7 @@ class validate extends base {
 		$combined_config_functions = $this->c->config->item('validate','functions',[]);
 
 		foreach ($this->internal as $i) {
-			$filename = __DIR__.'/../config/validate_'.$i.'.php';
-
-			$config = $this->c->config->item($filename);
-
-			$combined_config_functions = array_merge($combined_config_functions,$config);
+			$combined_config_functions = array_merge($combined_config_functions,$this->c->config->item(__DIR__.'/../config/validate_'.$i.'.php'));
 		}
 
 		/* quickly setup our functions from the config */
