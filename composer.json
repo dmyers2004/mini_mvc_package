@@ -11,7 +11,7 @@
 	},
 	"autoload": {
 			"psr-4": {
-					"dmyers2004\\mini_mvc_package\\": ""
+        "dmyers\\mvc\\": "/"
 			}
 	}
 }
