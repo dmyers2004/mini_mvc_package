@@ -1,7 +1,9 @@
 <?php
-namespace myersd\libraries;
+namespace dmyers\mvc;
 
-class log extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class log extends base {
 	protected $log_level = 0;
 	protected $log_file;
 	protected $log_format;

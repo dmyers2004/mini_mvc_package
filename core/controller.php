@@ -1,7 +1,9 @@
 <?php 
-namespace myersd\core;
+namespace dmyers\mvc;
 
-class controller extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class controller extends base {
 } /* end controller */
 
 

@@ -1,7 +1,9 @@
 <?php
-namespace myersd\libraries;
+namespace dmyers\mvc;
 
-class session extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class session extends base {
 	protected $flash_key = 'FLASHKEY';
 
 	public function init() {

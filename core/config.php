@@ -1,7 +1,9 @@
 <?php
-namespace myersd\core;
+namespace dmyers\mvc;
 
-class config extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class config extends base {
 	public function init() {
 		$defaults = [
 			'environment'=>ENV,

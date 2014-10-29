@@ -1,17 +1,18 @@
 {
 	"name" : "dmyers2004/mini_mvc_package",
+	"type": "library",
 	"description" : "mini mvc package",
 	"license": "MIT",
-  "authors": [{
-      "name": "Don Myers",
-      "email": "donmyers@me.com"
-  }],
+	"authors": [{
+			"name": "Don Myers",
+			"email": "donmyers@me.com"
+	}],
 	"require": {
 		"php": ">=5.4.0"
 	},
 	"autoload": {
 			"psr-4": {
-        "dmyers\\mvc\\": "/"
+				"dmyers\\mvc\\": "/dmyers2004/mini_mvc_package/core"
 			}
 	}
 }

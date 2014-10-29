@@ -1,7 +1,9 @@
 <?php
-namespace myersd\core;
+namespace dmyers\mvc;
 
-class output extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class output extends base {
 	protected $final_output = '';
 	protected $headers = [];
 	protected $mimes = [];

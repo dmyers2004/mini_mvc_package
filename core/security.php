@@ -1,9 +1,11 @@
 <?php
-namespace myersd\libraries;
+namespace dmyers\mvc;
+
+use \dmyers\mvc\base;
 
 // !todo log all denied & forged
 
-class security extends \myersd\core\base {
+class security extends base {
 	protected $default_error_msg_html = '<strong>Forged Request Detected</strong> If you clicked on a link and arrived here...that is bad.';
 	protected $default_error_msg_json = 'Forged Request Detected';
 

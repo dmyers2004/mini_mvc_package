@@ -1,6 +1,9 @@
 <?php 
+namespace dmyers\mvc;
 
-class url extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class url extends base {
 
 	/* redirect - cuz you always need one */
 	public function redirect($url='/') {

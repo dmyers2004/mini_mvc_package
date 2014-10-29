@@ -1,7 +1,9 @@
 <?php
-namespace myersd\core;
+namespace dmyers\mvc;
 
-class event extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class event extends base {
 
 	public function register($name, $callback) {
 		$key = strtolower((is_array($callback)) ? get_class($callback[0]).'/'.$callback[1] : $callback);

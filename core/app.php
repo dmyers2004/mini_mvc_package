@@ -1,7 +1,7 @@
 <?php
-namespace dmyers2004\mini_mvc_package;
+namespace dmyers\mvc;
 
-use dmyers2004\mini_mvc_package\core\base;
+use \dmyers\mvc\base;
 
 class app extends base {
 	protected $controller;

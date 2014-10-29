@@ -1,7 +1,9 @@
 <?php
-namespace myersd\libraries;
+namespace dmyers\mvc;
 
-class testing extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class testing extends base {
 	public $results = [];
 	public $strict = TRUE;
 

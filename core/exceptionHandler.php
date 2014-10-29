@@ -1,5 +1,5 @@
 <?php
-namespace myersd\core;
+namespace dmyers\mvc;
 
 class exceptionHandler {
 	protected static $attached = [];

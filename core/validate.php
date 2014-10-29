@@ -1,7 +1,9 @@
 <?php
-namespace myersd\libraries;
+namespace dmyers\mvc;
 
-class validate extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class validate extends base {
 	protected $attached = [];
 	protected $_field_data = [];
 	protected $_error_array = [];

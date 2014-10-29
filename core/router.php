@@ -1,7 +1,9 @@
 <?php
-namespace myersd\core;
+namespace dmyers\mvc;
 
-class router extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class router extends base {
 	public function route($uri=NULL) {
 		/* have the input object prep/save the uri */
 		$segs = $this->c->input->segments($uri);

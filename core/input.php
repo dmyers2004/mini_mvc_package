@@ -1,7 +1,9 @@
 <?php
-namespace myersd\core;
+namespace dmyers\mvc;
 
-class input extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class input extends base {
 	protected $capture = ['server','post','get','cookie','env','files','request','put'];
 
 	public function init() {

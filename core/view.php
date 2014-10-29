@@ -1,7 +1,9 @@
 <?php
-namespace myersd\libraries;
+namespace dmyers\mvc;
 
-class view extends \myersd\core\base {
+use \dmyers\mvc\base;
+
+class view extends base {
 	public function data($name=NULL,$value='#FOOBAR#') {
 		$return = $this;
 
