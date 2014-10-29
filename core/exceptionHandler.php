@@ -1,6 +1,18 @@
 <?php
 namespace dmyers\mvc;
 
+/*
+800 $config variable not found
+801 config file not found
+802 container value not found
+803 controller file not found
+804 method not found
+805 could not validate against
+806 validation forgery detected
+807 view file not found
+808 access denied
+*/
+
 class exceptionHandler {
 	protected static $attached = [];
 	protected static $container;

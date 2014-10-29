@@ -6,12 +6,7 @@ use \dmyers\mvc\base;
 class output extends base {
 	protected $final_output = '';
 	protected $headers = [];
-	protected $mimes = [];
 	protected $mime_type = 'text/html';
-
-	public function init() {
-		$this->mimes = $this->c->config->item('mimes','mimes');
-	}
 
 	public function get_output() {
 		return $this->final_output;
@@ -40,22 +35,7 @@ class output extends base {
 	}
 
 	public function set_content_type($mime_type) {
-		if (strpos($mime_type, '/') === FALSE) {
-			$extension = ltrim($mime_type, '.');
-
-			// Is this extension supported?
-			if (isset($this->mime_types[$extension])) {
-				$mime_type =& $this->mime_types[$extension];
-
-				if (is_array($mime_type)) {
-					$mime_type = current($mime_type);
-				}
-			}
-		}
-
-		$header = 'Content-Type: '.$mime_type;
-
-		$this->headers[] = array($header, TRUE);
+		$this->headers[] = ['Content-Type: '.$mime_type, TRUE];
 
 		return $this;
 	}
@@ -67,13 +47,17 @@ class output extends base {
 	}
 
 	public function get_content_type() {
+		$content_type = $this->mime_type;
+		
 		for ($i = 0, $c = count($this->headers); $i < $c; $i++) {
-			if (sscanf($this->headers[$i][0], 'Content-Type: %[^;]', $content_type) === 1) {
-				return $content_type;
+			if (sscanf($this->headers[$i][0], 'Content-Type: %[^;]', $ctype) === 1) {
+				$content_type = $ctype;
+
+				break;
 			}
 		}
 
-		return $this->mime_type;
+		return $content_type;
 	}
 
 	public function get_header($header) {

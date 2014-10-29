@@ -14,28 +14,21 @@ class validate extends base {
 	protected $die_on_failure;
 	protected $success;
 	protected $error;
-	protected $config;
 	protected $internal = ['string']; /* internal already known libraries */
 	protected $errors_detailed = []; /* used for debugging */
 
 	public function init() {
-		$this->config = $this->c->config->item('validate');
-
 		$this->json_options = $this->c->config->item('validate','json_options',JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
 		$this->die_on_failure = $this->c->config->item('validate','die_on_failure',TRUE);
-		$this->_error_prefix = $this->c->config->item('validate','_error_prefix','<p>');
-		$this->_error_suffix = $this->c->config->item('validate','_error_suffix','</p>');
+		$this->_error_prefix = $this->c->config->item('validate','error_prefix','<p>');
+		$this->_error_suffix = $this->c->config->item('validate','error_suffix','</p>');
 
 		$combined_config_functions = $this->c->config->item('validate','functions',[]);
 
 		foreach ($this->internal as $i) {
-			$filename = __DIR__.'/validate/'.$i.'.php';
+			$filename = __DIR__.'/../config/validate_'.$i.'.php';
 
-			if (!file_exists($filename)) {
-				throw new \Exception('Could Not Find Validate File "'.$file.'"',807);
-			}
-
-			include $filename;
+			$config = $this->c->config->item($filename);
 
 			$combined_config_functions = array_merge($combined_config_functions,$config);
 		}
@@ -146,7 +139,9 @@ class validate extends base {
 
 	public function single($rules,&$field,$human_label=NULL) {
 		/* store rule groups in the validate config */
-		$rules = (!isset($this->config[$rules])) ? $rules : $this->config[$rules];
+		$config_rule = $this->c->config->item('validate','rule_'.$rules);
+
+		$rules = ($config_rule) ? $config_rule : $rules;
 
 		/* if human_label is true then die on fali */
 		if ($human_label === TRUE) {
@@ -206,7 +201,7 @@ class validate extends base {
 					}
 				/* rule not found */
 				} else {
-					throw new \Exception('Could Not Validate Against "'.$rule.'"',808);
+					throw new \Exception('Could Not Validate Against "'.$rule.'"',805);
 				}
 
 				/* FAIL! */
@@ -225,7 +220,7 @@ class validate extends base {
 
 					/* they have the die on fail on then die now */
 					if ($this->die_on_failure) {
-						throw new \Exception('Validation Forgery Detected',809);
+						throw new \Exception('Validation Forgery Detected',806);
 					}
 
 					break;

@@ -12,7 +12,7 @@ class container {
 
 	public function __get($key){
 		if (!isset($this->data[$key])) {
-			throw new \Exception(sprintf('Value "%s" is not defined.', $key),802);
+			throw new \Exception(sprintf('Value "%s" is not defined in container.', $key),802);
 		}
 
 		return is_callable($this->data[$key]) ? $this->data[$key]($this) : $this->data[$key];

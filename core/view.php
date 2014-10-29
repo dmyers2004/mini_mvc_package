@@ -43,7 +43,7 @@ class view extends base {
 			$_mvc_output = ob_get_clean();
 		} else {
 			/* simply error and exit */
-			throw new \Exception('View File "views/'.$_mvc_view_name.'.php" Not Found',810);
+			throw new \Exception('View File "views/'.$_mvc_view_name.'.php" Not Found',807);
 		}
 
 		if ($_mvc_var_name != NULL) {

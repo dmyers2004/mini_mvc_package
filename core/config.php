@@ -26,7 +26,7 @@ class config extends base {
 		];
 
 		/* merge loaded over defaults */
-		$this->data['application'] = array_replace_recursive($defaults,(array)$this->item('application'));		
+		$this->data['application'] = array_replace_recursive($defaults,(array)$this->item('application'));
 	}
 
 	/* give me everything! */
@@ -45,33 +45,26 @@ class config extends base {
 		$env_value = ENV;
 
 		if (!isset($this->data[$filename])) {
-			/* default empty */
-			$base_config = $env_config = [];
+			/* exact path match? */
+			if ($filename{0} == '/') {
+				$combined = $this->get_config($filename);
+			} else {
+				$base_config = $env_config = [];
 
-			if ($config_filename = stream_resolve_include_path('config/'.$filename.'.php')) {
-				include $config_filename;
-
-				if (!isset($config)) {
-					throw new \Exception('Config variable not found in "config/'.$filename.'.php"',800);
+				if ($config_filename = stream_resolve_include_path('config/'.$filename.'.php')) {
+					$base_config = $this->get_config($config_filename);
 				}
 
-				$base_config = $config;
-			}
-
-			if ($env_value) {
-				if ($config_filename = stream_resolve_include_path('config/'.$env_value.'/'.$filename.'.php')) {
-					include $config_filename;
-
-					if (!isset($config)) {
-						throw new Config_Variable_Not_Found_Exception('Config variable not found in "config/'.$env_value.'/'.$filename.'.php"',801);
+				if ($env_value) {
+					if ($config_filename = stream_resolve_include_path('config/'.$env_value.'/'.$filename.'.php')) {
+						$env_config = $this->get_config($config_filename);
 					}
-
-					$env_config = $config;
 				}
 
+				$combined = array_replace_recursive($base_config,$env_config);
 			}
 
-			$this->data[$filename] = array_replace_recursive($base_config,$env_config);
+			$this->data[$filename] = $combined;
 		}
 
 		if ($field) {
@@ -80,5 +73,21 @@ class config extends base {
 			return $this->data[$filename];
 		}
 	} /* end item */
+
+	protected function get_config($filename) {
+		$config = [];
+		
+		if (file_exists($filename)) {
+			include $filename;
+	
+			if (!isset($config)) {
+				throw new \Exception('$config variable not found in "'.$filename.'"',800);
+			}
+		} else {
+			throw new \Exception('Config file not found at "'.$filename.'"',801);
+		}
+		
+		return $config;
+	}
 
 } /* end config class */

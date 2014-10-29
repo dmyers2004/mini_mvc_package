@@ -31,10 +31,10 @@ $c->router = $c->shared(function($c) { return new \dmyers\mvc\router($c); });
 $c->input = $c->shared(function($c) { return new \dmyers\mvc\input($c); });
 $c->output = $c->shared(function($c) { return new \dmyers\mvc\output($c); });
 
-$c->log = $c->shared(function($c) { return new \myersd\libraries\log($c); });
-$c->session = $c->shared(function($c) { return new \myersd\libraries\session($c); });
-$c->view = $c->shared(function($c) { return new \myersd\libraries\view($c); });
-$c->validate = $c->shared(function($c) { return new \myersd\libraries\validate($c); });
+$c->log = $c->shared(function($c) { return new \dmyers\mvc\log($c); });
+$c->session = $c->shared(function($c) { return new \dmyers\mvc\session($c); });
+$c->view = $c->shared(function($c) { return new \dmyers\mvc\view($c); });
+$c->validate = $c->shared(function($c) { return new \dmyers\mvc\validate($c); });
 
 \dmyers\mvc\exceptionHandler::load($c);
 set_exception_handler(['\dmyers\mvc\exceptionHandler','handleException']);
