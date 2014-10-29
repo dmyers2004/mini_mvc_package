@@ -12,7 +12,7 @@
 	},
 	"autoload": {
 			"psr-4": {
-				"dmyers\\mvc\\": "/dmyers2004/mini_mvc_package/core"
+				"dmyers\\mvc\\": "/core"
 			}
 	}
 }
