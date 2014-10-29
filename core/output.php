@@ -28,20 +28,8 @@ class output extends base {
 		return $this;
 	}
 
-	public function set_header($header, $replace = TRUE) {
-		$this->headers[] = [$header, $replace];
-
-		return $this;
-	}
-
 	public function set_content_type($mime_type) {
 		$this->headers[] = ['Content-Type: '.$mime_type, TRUE];
-
-		return $this;
-	}
-
-	public function set_status_header($code = 200, $text = '') {
-		set_status_header($code, $text);
 
 		return $this;
 	}
@@ -58,6 +46,12 @@ class output extends base {
 		}
 
 		return $content_type;
+	}
+
+	public function set_header($header, $replace = TRUE) {
+		$this->headers[] = [$header, $replace];
+
+		return $this;
 	}
 
 	public function get_header($header) {

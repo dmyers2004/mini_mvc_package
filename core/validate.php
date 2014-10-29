@@ -5,10 +5,10 @@ use \dmyers\mvc\base;
 
 class validate extends base {
 	protected $attached = [];
-	protected $_field_data = [];
-	protected $_error_array = [];
-	protected $_error_prefix	= '';
-	protected $_error_suffix	= '';
+	protected $field_data = [];
+	protected $error_array = [];
+	protected $error_prefix	= '';
+	protected $error_suffix	= '';
 	protected $error_string = '';
 	protected $json_options;
 	protected $die_on_failure;
@@ -18,15 +18,15 @@ class validate extends base {
 	protected $errors_detailed = []; /* used for debugging */
 
 	public function init() {
-		$this->json_options = $this->c->config->item('validate','json_options',JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
-		$this->die_on_failure = $this->c->config->item('validate','die_on_failure',TRUE);
-		$this->_error_prefix = $this->c->config->item('validate','error_prefix','<p>');
-		$this->_error_suffix = $this->c->config->item('validate','error_suffix','</p>');
+		$this->json_options = $this->c->config->validate('json_options',JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_FORCE_OBJECT);
+		$this->die_on_failure = $this->c->config->validate('die_on_failure',TRUE);
+		$this->error_prefix = $this->c->config->validate('error_prefix','<p>');
+		$this->error_suffix = $this->c->config->validate('error_suffix','</p>');
 
-		$combined_config_functions = $this->c->config->item('validate','functions',[]);
+		$combined_config_functions = $this->c->config->validate('functions',[]);
 
 		foreach ($this->internal as $i) {
-			$combined_config_functions = array_merge($combined_config_functions,$this->c->config->item(__DIR__.'/../config/validate_'.$i.'.php'));
+			$combined_config_functions = array_merge($combined_config_functions,$this->c->config->absolute(__DIR__.'/../config/validate_'.$i.'.php'));
 		}
 
 		/* quickly setup our functions from the config */
@@ -43,26 +43,26 @@ class validate extends base {
 	}
 
 	public function add_error($text) {
-		$this->_error_array[] = $text;
+		$this->error_array[] = $text;
 
-		return $this;
+		return $this; /* allow chaining */
 	}
 
 	public function error_array() {
-		return $this->_error_array;
+		return $this->error_array;
 	}
 
 	public function error_string($prefix='',$suffix='') {
 		$str = '';
 
 		// No errors, validation passes!
-		if (count($this->_error_array) > 0) {
-			$prefix = ($prefix === '') ? $prefix : $this->_error_prefix;
-			$suffix = ($suffix === '') ? $suffix : $this->_error_suffix;
+		if (count($this->error_array) > 0) {
+			$prefix = ($prefix === '') ? $prefix : $this->error_prefix;
+			$suffix = ($suffix === '') ? $suffix : $this->error_suffix;
 
 			// Generate the error string
 
-			foreach ($this->_error_array as $val) {
+			foreach ($this->error_array as $val) {
 				if ($val !== '') {
 					$str .= $prefix.$val.$suffix.chr(10);
 				}
@@ -75,19 +75,19 @@ class validate extends base {
 	public function set_message($text='') {
 		$this->error_string = $text;
 
-		return $this;
+		return $this; /* allow chaining */
 	}
 
 	public function set_error_delimiters($prefix='<p>',$suffix='</p>') {
-		$this->_error_prefix = $prefix;
-		$this->_error_suffix = $suffix;
+		$this->error_prefix = $prefix;
+		$this->error_suffix = $suffix;
 
-		return $this;
+		return $this; /* allow chaining */
 	}
 
 	/* get last error */
 	public function error($field,$prefix='',$suffix='') {
-		$html = end($this->_error_array);
+		$html = end($this->error_array);
 
 		return $prefix.$html.$suffix;
 	}
@@ -99,43 +99,61 @@ class validate extends base {
 	}
 
 	public function clear() {
-		$this->_error_array = [];
+		$this->error_array = [];
 		$this->errors_detailed = [];
 		$this->die_on_failure = FALSE;
 		$this->success = FALSE;
 
-		return $this;
+		return $this; /* allow chaining */
 	}
 
 	public function attach($name,$func) {
 		$this->attached['validate_'.$name] = $func;
 
-		return $this;
+		return $this; /* allow chaining */
 	}
 
 	public function die_on_fail($boolean=TRUE) {
 		$this->die_on_failure = $boolean;
 
-		return $this;
+		return $this; /* allow chaining */
 	}
 
 	public function test($rules,&$field) {
 		/* by default fail on failure */
 		$this->single($rules,$field,TRUE);
 
-		return $this;
+		return $this; /* allow chaining */
 	}
 
 	public function filter($rules,&$field) {
 		/* by default who cares on failure use this to filter input only (they all return true) */
 		$this->single($rules,$field,FALSE);
 
-		return $this;
+		return $this; /* allow chaining */
 	}
+
+	public function post($rules='',$index='') {
+		$field = $this->c->input->post($index);
+
+		/* filter post and die on fail */
+		$this->validate->single($rules,$field);
+
+		return $this; /* allow chaining */
+	}
+
+	public function multiple($rules,&$fields) {
+		foreach ($rules as $fieldname=>$rule) {
+			/* success/fail doesn't matter until we run all the tests on all of the fields */
+			$this->single($rule['rules'],$fields[$fieldname],$rule['label']);
+		}
+
+		return (bool)(count($this->error_array) == 0);
+	} /* end multiple */
 
 	public function single($rules,&$field,$human_label=NULL) {
 		/* store rule groups in the validate config */
-		$config_rule = $this->c->config->item('validate','rule_'.$rules);
+		$config_rule = $this->c->config->validate('rule_'.$rules);
 
 		$rules = ($config_rule) ? $config_rule : $rules;
 
@@ -226,27 +244,5 @@ class validate extends base {
 
 		return $this->success;
 	} /* end single */
-
-	public function multiple($rules,&$fields) {
-		$this->_field_data = &$fields;
-
-		foreach ($rules as $fieldname=>$rule) {
-			/* success fail doesn't matter until we run all the tests on all of the fields */
-			$this->single($rule['rules'],$this->_field_data[$fieldname],$rule['label']);
-		}
-
-		$fields = &$this->_field_data;
-
-		return (bool)(count($this->_error_array) == 0);
-	} /* end multiple */
-
-	public function post($rules='',$index='') {
-		$field = $this->c->input->post($index);
-
-		/* filter post and die on fail */
-		$this->validate->single($rules,$field);
-
-		return $this; /* allow chaining */
-	}
 
 } /* end validate class */

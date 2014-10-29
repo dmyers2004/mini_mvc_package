@@ -9,11 +9,11 @@ class app extends base {
 	/* setup a few basic items */
 	public function init() {
 		/* set our timezone */
-		date_default_timezone_set($this->c->config->item('application','timezone'));
+		date_default_timezone_set($this->c->config->application('timezone'));
 
 		/* setup our error display */
-		error_reporting($this->c->config->item('application','error_reporting'));
-		ini_set('display_errors',$this->c->config->item('application','display_errors'));
+		error_reporting($this->c->config->application('error_reporting'));
+		ini_set('display_errors',$this->c->config->application('display_errors'));
 	}
 	
 	/* get & set the controller object */

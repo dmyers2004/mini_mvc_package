@@ -8,7 +8,7 @@ class input extends base {
 
 	public function init() {
 		foreach ($this->capture as $var) {
-			$this->data[$var] = $this->c->config->item('application',$var);
+			$this->data[$var] = $this->c->config->application($var);
 		}
 
 		/* is this a ajax request? */
@@ -23,7 +23,7 @@ class input extends base {
 		/* what type of request for REST or other */
 		$this->data['raw_method'] = strtolower($this->data['server']['REQUEST_METHOD']);
 
-		$this->data['method'] = $this->c->config->item('application','request_methods')[$this->data['raw_method']];
+		$this->data['method'] = $this->c->config->application('request_methods')[$this->data['raw_method']];
 			
 		/* PHP doesn't handle PUT very well so we need to capture that manually */
 		if ($this->data['raw_method'] == 'put') {

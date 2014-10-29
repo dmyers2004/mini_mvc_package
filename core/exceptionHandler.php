@@ -43,7 +43,7 @@ class exceptionHandler {
 	public static function load(container &$container) {
 		self::$container = $container;
 
-		$configs = $container->config->item('exception');
+		$configs = $container->config->exception();
 
 		foreach ($configs as $num=>$function) {
 			self::$attached[$num] = $function;

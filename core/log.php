@@ -31,10 +31,10 @@ class log extends base {
 	];
 
 	public function init() {
-		$this->log_level = $this->c->config->item('log','log_level');
-		$this->log_file = $this->c->app->root().$this->c->config->item('log','log_file');
-		$this->log_format = $this->c->config->item('log','log_format','Y-m-d H:i:s');
-		$this->log_generic = $this->c->config->item('log','log_generic','GENERAL');
+		$this->log_level = $this->c->config->log('log_level',0);
+		$this->log_file = $this->c->app->root().$this->c->config->log('log_file',NULL);
+		$this->log_format = $this->c->config->log('log_format','Y-m-d H:i:s');
+		$this->log_generic = $this->c->config->log('log_generic','GENERAL');
 	}
 
 	public function __call($level,$value) {
@@ -47,12 +47,6 @@ class log extends base {
 		return FALSE;
 	} /* end __call */
 
-	public function write($msg, $level) {
-		$level = ($level) ? $level : $this->log_generic;
-
-		return file_put_contents($this->log_file,date($this->log_format).' '.$level.' '.$msg.chr(10),FILE_APPEND);
-	} /* end write */
-
 	protected function _write($level, $msg='') {
 		if ($this->log_level > 0) {
 			$level = strtoupper($level);
@@ -64,5 +58,16 @@ class log extends base {
 			return $this->write($msg,$level);
 		}
 	} /* end _write */
+
+	public function write($msg, $level) {
+		$level = ($level) ? $level : $this->log_generic;
+
+		if ($this->log_file != NULL) {
+			return file_put_contents($this->log_file,date($this->log_format).' '.$level.' '.$msg.chr(10),FILE_APPEND);
+		}
+		
+		return FALSE;
+	} /* end write */
+
 
 } /* end log class */

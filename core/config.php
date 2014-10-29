@@ -30,34 +30,41 @@ class config extends base {
 	}
 
 	/* give me everything! */
-	public function all() {
+	public function __toString() {
 		return $this->data;
 	}
 
-	/* these are NOT saved between requests */
-	public function set($filename,$field) {
-		$this->data[$filename][$field];
-
-		return $this;
+	public function __call($name,$arguments) {
+		$return = $this;
+		
+		if (substr($name,0,4) == 'set_') {
+			/* these are NOT saved between requests */
+			$name = substr($name,4);
+			$this->data[$name][@$arguments[0]] = @$arguments[1];
+		} else {
+			$return = $this->absolute($name,@$arguments[0],@$arguments[1]);
+		}
+		
+		return $return;
 	}
 
-	public function item($filename,$field=NULL,$default=NULL) {
+	public function absolute($filename,$field=NULL,$default=NULL) {
 		$env_value = ENV;
 
 		if (!isset($this->data[$filename])) {
 			/* exact path match? */
 			if ($filename{0} == '/') {
-				$combined = $this->get_config($filename);
+				$combined = $this->_get_config($filename);
 			} else {
 				$base_config = $env_config = [];
 
 				if ($config_filename = stream_resolve_include_path('config/'.$filename.'.php')) {
-					$base_config = $this->get_config($config_filename);
+					$base_config = $this->_get_config($config_filename);
 				}
 
 				if ($env_value) {
 					if ($config_filename = stream_resolve_include_path('config/'.$env_value.'/'.$filename.'.php')) {
-						$env_config = $this->get_config($config_filename);
+						$env_config = $this->_get_config($config_filename);
 					}
 				}
 
@@ -74,7 +81,7 @@ class config extends base {
 		}
 	} /* end item */
 
-	protected function get_config($filename) {
+	protected function _get_config($filename) {
 		$config = [];
 		
 		if (file_exists($filename)) {
