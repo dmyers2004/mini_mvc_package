@@ -26,7 +26,7 @@ class config extends base {
 		];
 
 		/* merge loaded over defaults */
-		$this->data['bootstrap'] = array_replace_recursive($defaults,(array)$this->item('bootstrap'));		
+		$this->data['application'] = array_replace_recursive($defaults,(array)$this->item('application'));		
 	}
 
 	/* give me everything! */
