@@ -1,0 +1,1 @@
+<h1>We Are <?=$welcome ?></h1>
