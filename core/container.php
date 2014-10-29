@@ -1,6 +1,6 @@
 <?php
 // http://fabien.potencier.org/article/17/on-php-5-3-lambda-functions-and-closures
-namespace myersd\core;
+namespace dmyers2004\mini_mvc_package;
 
 class container {
 	protected $data = [];

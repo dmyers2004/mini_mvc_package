@@ -1,7 +1,9 @@
 <?php
-namespace myersd\core;
+namespace dmyers2004\mini_mvc_package;
 
-class app extends \myersd\core\base {
+use dmyers2004\mini_mvc_package\core\base;
+
+class app extends base {
 	protected $controller;
 
 	/* setup a few basic items */

@@ -1,7 +1,7 @@
 <?php
-namespace myersd\core;
+namespace dmyers2004\mini_mvc_package;
 
-use myersd\core\container;
+use dmyers2004\mini_mvc_package\core\container;
 
 class base {
 	protected $c;
