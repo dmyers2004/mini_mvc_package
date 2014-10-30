@@ -67,11 +67,9 @@ class router extends base {
 		$controller = new $this->data['classname']($this->c);
 
 		/* what method are we going to try to call? */
-		$this->data['called'] = $this->c->config->application('request_method_format');
+		$rmf = $this->c->config->application('request_method_format');
 
-		$this->data['called'] = str_replace('%c',$this->data['method'],$this->data['called']);
-		$this->data['called'] = str_replace('%a',$this->c->input->ajax(),$this->data['called']);
-		$this->data['called'] = str_replace('%m',$this->c->input->method(),$this->data['called']);
+		$this->data['called'] = str_replace(['%c','%a','%m'],[$this->data['method'],$this->c->input->ajax(),$this->c->input->method()],$rmf);
 
 		if (method_exists($controller,'_remap')) {
 			$this->data['parameters'] = [$this->data['called'],$this->data['parameters']];
