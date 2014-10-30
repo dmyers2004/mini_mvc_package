@@ -5,5 +5,3 @@ use \dmyers\mvc\base;
 
 class controller extends base {
 } /* end controller */
-
-

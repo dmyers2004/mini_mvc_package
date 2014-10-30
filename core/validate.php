@@ -14,7 +14,7 @@ class validate extends base {
 	protected $die_on_failure;
 	protected $success;
 	protected $error;
-	protected $internal = ['string']; /* internal already known libraries */
+	protected $internal = ['string','number','time','file','filter','image','misc']; /* internal already known libraries */
 	protected $errors_detailed = []; /* used for debugging */
 
 	public function init() {
@@ -23,14 +23,18 @@ class validate extends base {
 		$this->error_prefix = $this->c->config->validate('error_prefix','<p>');
 		$this->error_suffix = $this->c->config->validate('error_suffix','</p>');
 
-		$combined_config_functions = $this->c->config->validate('functions',[]);
+		$closures = $this->c->config->validate('functions',[]);
 
 		foreach ($this->internal as $i) {
-			$combined_config_functions = array_merge($combined_config_functions,$this->c->config->absolute(__DIR__.'/../config/validate_'.$i.'.php'));
+			if (!$path = realpath(__DIR__.'/../config/validate_'.$i.'.php')) {
+				throw new \Exception('Internal Validate File "'.$i.'" Not Found.',806);
+			}
+
+			$closures = array_merge($closures,$this->c->config->absolute($path));
 		}
 
 		/* quickly setup our functions from the config */
-		foreach ($combined_config_functions as $name=>$function) {
+		foreach ($closures as $name=>$function) {
 			$this->attach($name,$function);
 		}
 
@@ -108,7 +112,7 @@ class validate extends base {
 	}
 
 	public function attach($name,$func) {
-		$this->attached['validate_'.$name] = $func;
+		$this->attached['v_'.$name] = $func;
 
 		return $this; /* allow chaining */
 	}
@@ -188,16 +192,13 @@ class validate extends base {
 				$this->success = FALSE;
 				$this->error_string = '%s is not valid.';
 
-				$attached = $this->attached;
-
 				/* is it a attached (closure) validation function? */
-				if (isset($attached['validate_'.$rule])) {
+				if (isset($this->attached['v_'.$rule])) {
 					if ($param !== NULL) {
-						$this->success = $attached['validate_'.$rule]($this,$field,$param);
+						$this->success = $this->attached['v_'.$rule]($this,$field,$param);
 					} else {
-						$this->success = $attached['validate_'.$rule]($this,$field);
+						$this->success = $this->attached['v_'.$rule]($this,$field);
 					}
-
 				/* is it a PHP method? */
 				} elseif (function_exists($rule)) {
 					/* Try PHP Functions */
@@ -224,7 +225,7 @@ class validate extends base {
 					$field = NULL;
 
 					/* if the label is not provided use the rule name */
-					$human_label = (empty($human_label)) ? ucwords(str_replace('_','',$rule)) : $human_label;
+					$human_label = (empty($human_label)) ? ucfirst(str_replace('_',' ',$rule)) : $human_label;
 
 					/* replace %s with human label */
 					$this->add_error(sprintf($this->error_string, $human_label, $param));

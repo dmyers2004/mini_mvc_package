@@ -36,15 +36,18 @@ class config extends base {
 
 	public function __call($name,$arguments) {
 		$return = $this;
-		
+
+		$arguments[0] = (isset($arguments[0])) ? $arguments[0] : '';
+		$arguments[1] = (isset($arguments[1])) ? $arguments[1] : '';
+
 		if (substr($name,0,4) == 'set_') {
 			/* these are NOT saved between requests */
 			$name = substr($name,4);
-			$this->data[$name][@$arguments[0]] = @$arguments[1];
+			$this->data[$name][$arguments[0]] = $arguments[1];
 		} else {
-			$return = $this->absolute($name,@$arguments[0],@$arguments[1]);
+			$return = $this->absolute($name,$arguments[0],$arguments[1]);
 		}
-		
+
 		return $return;
 	}
 
@@ -83,17 +86,17 @@ class config extends base {
 
 	protected function _get_config($filename) {
 		$config = [];
-		
+
 		if (file_exists($filename)) {
 			include $filename;
-	
+
 			if (!isset($config)) {
 				throw new \Exception('$config variable not found in "'.$filename.'"',800);
 			}
 		} else {
 			throw new \Exception('Config file not found at "'.$filename.'"',801);
 		}
-		
+
 		return $config;
 	}
 

@@ -3,11 +3,82 @@
 true is success
 false is fail
 */
+$config['min_length'] = function($validate,$str, $val) {
+	$validate->set_message('The %s field must be at least %s characters in length.');
+
+	if (!is_numeric($val)) {
+		return FALSE;
+	}
+
+	return ((int)$val <= strlen($str));
+};
+
+$config['max_length'] = function($validate,$str, $val) {
+	$validate->set_message('The %s field cannot exceed %s characters in length.');
+
+	if (!is_numeric($val)) {
+		return FALSE;
+	}
+
+	return ((int)$val >= strlen($str));
+};
+
+$config['exact_length'] = function($validate,$str, $val) {
+	$validate->set_message('The %s field must be exactly %s characters in length.');
+
+	if (!is_numeric($val)) {
+		return FALSE;
+	}
+
+	return ((int)$val === strlen($str));
+};
+
+$config['alpha'] = function($validate,$str) {
+	$validate->set_message('The %s field may only contain alphabetical characters.');
+
+	return ctype_alpha($str);
+};
+
+$config['alpha_numeric'] = function($validate,$str) {
+	$validate->set_message('The %s field may only contain alpha-numeric characters.');
+
+	return ctype_alnum((string)$str);
+};
+
+$config['alpha_numeric_spaces'] = function($validate,$str) {
+	$validate->set_message('The %s field may only contain alpha-numeric characters and spaces.');
+
+	return (bool)preg_match('/^[A-Z0-9 ]+$/i', $str);
+};
+
+$config['alpha_dash'] = function($validate,$str) {
+	$validate->set_message('The %s field may only contain alpha-numeric characters, underscores, and dashes.');
+
+	return (bool)preg_match('/^[a-z0-9_-]+$/i', $str);
+};
+
+$config['valid_base64'] = function($validate,$str) {
+	$validate->set_message('The %s field is not valid Base64.');
+
+	return (base64_encode(base64_decode($str)) === $str);
+};
+
+$config['prep_url'] = function($validate,&$str) {
+	if ($str === 'http://' OR $str === '') {
+		$str = '';
+	}
+
+	if (strpos($str, 'http://') !== 0 && strpos($str, 'https://') !== 0) {
+		$str = 'http://'.$str;
+	}
+};
+
+$config['encode_php_tags'] = function($validate,&$str) {
+	$str = str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $str);
+};
 
 $config['length'] = function($validate,&$input,$options=NULL) {
 	$input = substr($input,0,($length = (!$length) ? 2048 : $options));
-	
-	return TRUE;
 };
 
 $config['items'] = function($validate,&$input,$options=NULL) {
@@ -123,13 +194,13 @@ $config['ends_with'] = function($validate,&$input,$options=NULL) {
 };
 
 $config['starts_with'] = function($validate,&$input,$options=NULL) {
-	$this->set_message('%s must start with '.$options);
+	$validate->set_message('%s must start with '.$options);
 
 	return (bool)(substr($input,0,strlen($options)) == $options);
 };
 
 $config['contains'] = function($validate,&$input,$options=NULL) {
-	$this->set_message('%s must contain '.$options);
+	$validate->set_message('%s must contain '.$options);
 
 	return (bool)(strpos($input,$options) !== false) ? TRUE : FALSE;
 };

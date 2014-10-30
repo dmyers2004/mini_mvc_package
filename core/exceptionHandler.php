@@ -11,6 +11,7 @@ namespace dmyers\mvc;
 806 validation forgery detected
 807 view file not found
 808 access denied
+809 validation error
 */
 
 class exceptionHandler {
@@ -40,7 +41,7 @@ class exceptionHandler {
 		}
 	}
 
-	public static function load(container &$container) {
+	public static function init(container &$container) {
 		self::$container = $container;
 
 		$configs = $container->config->exception();
@@ -48,6 +49,6 @@ class exceptionHandler {
 		foreach ($configs as $num=>$function) {
 			self::$attached[$num] = $function;
 		}
-
 	}
+
 } /* end exception */
