@@ -5,10 +5,24 @@ use \dmyers\mvc\base;
 
 class router extends base {
 	public function route($uri=NULL) {
-		/* have the input object prep/save the uri */
-		$segs = $this->c->input->segments($uri);
+		$segs = $this->c->input->raw_uri();
 
-		$segs = ($segs[0] == '') ? [$this->c->config->application('default_controller'),$this->c->config->application('default_method')] : $segs;
+		$segs = ($segs == '/') ? '/'.$this->c->config->application('default_controller').'/'.$this->c->config->application('default_method') : $segs;
+
+		/* any regular expression routing? */
+		$routes = (array)$this->c->config->routes();
+
+		foreach ($routes as $expression=>$replacement) {
+			if (preg_match('#^'.$expression.'$#', $segs, $matches)) {
+				$segs = preg_replace('#^'.$expression.'$#', $replacement, $segs);				
+				/* got one bail */
+				break;
+			}
+		}
+		
+		$this->data['routed_uri'] = $segs;
+		
+		$segs = $this->data['segements'] = explode('/',$segs);
 
 		/* setup the defaults */
 		$this->data['controller'] = '';
@@ -68,7 +82,7 @@ class router extends base {
 		if (method_exists($controller, $this->data['called'])) {
 			/* attach this to the application instance */
 			$this->c->app->controller($controller);
-		
+
 			/* call the method and echo what's returned */
 			echo call_user_func_array([$controller,$this->data['called']],$this->data['parameters']);
 		} else {
@@ -78,6 +92,14 @@ class router extends base {
 
 		return $this->c;
 	} /* end route */
+
+	public function segements() {
+		return $this->data['segements'];
+	}
+	
+	public function routed_uri() {
+		return $this->data['routed_uri'];
+	}
 
 	public function called() {
 		return $this->data['called'];

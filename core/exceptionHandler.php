@@ -12,6 +12,7 @@ namespace dmyers\mvc;
 807 view file not found
 808 access denied
 809 validation error
+810 cache error
 */
 
 class exceptionHandler {

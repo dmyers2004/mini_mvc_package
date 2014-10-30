@@ -19,6 +19,9 @@ $content = str_replace('#hash#',md5(uniqid('',TRUE)),$content);
 file_put_contents($to_root.'/application/config/application.php',$content);
 
 @mkdir($to_root.'/packages');
+@mkdir($to_root.'/var');
+@mkdir($to_root.'/var/logs',0777);
+@mkdir($to_root.'/var/cache',0777);
 
 echo 'Complete'.chr(10);
 
