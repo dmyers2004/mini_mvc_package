@@ -4,7 +4,7 @@ namespace dmyers\mvc;
 use \dmyers\mvc\base;
 
 class app extends base {
-	protected $controller;
+	protected $controller = NULL;
 
 	/* setup a few basic items */
 	public function init() {
@@ -17,16 +17,18 @@ class app extends base {
 	}
 	
 	/* get & set the controller object */
-	public function controller(&$obj=NULL) {
-		$return = $this;
-		
-		if ($obj == NULL) {
-			$return = $this->controller;
-		} else {
-			$this->controller = $obj;
-		}	
-		
-		return $return;
+	public function controller() {
+		return $this->controller;
+	}
+	
+	public function route($uri=NULL) {
+		$this->controller = $this->c->router->route($uri);
+	
+		return $this;
+	}
+	
+	public function output() {
+		$this->c->output->display();
 	}
 
 } /* end application */

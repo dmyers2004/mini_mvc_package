@@ -20,7 +20,7 @@ class router extends base {
 			}
 		}
 		
-		$this->data['routed_uri'] = $segs;
+		$this->data['uri'] = $segs;
 		
 		$segs = $this->data['segements'] = explode('/',$segs);
 
@@ -78,9 +78,6 @@ class router extends base {
 
 		/* does that method even exist? */
 		if (method_exists($controller, $this->data['called'])) {
-			/* attach this to the application instance */
-			$this->c->app->controller($controller);
-
 			/* call the method and echo what's returned */
 			echo call_user_func_array([$controller,$this->data['called']],$this->data['parameters']);
 		} else {
@@ -88,15 +85,15 @@ class router extends base {
 			throw new \Exception('Method "'.$this->data['called'].'" Not Found',804);
 		}
 
-		return $this->c;
+		return $controller;
 	} /* end route */
 
 	public function segements() {
 		return $this->data['segements'];
 	}
 	
-	public function routed_uri() {
-		return $this->data['routed_uri'];
+	public function uri() {
+		return $this->data['uri'];
 	}
 
 	public function called() {

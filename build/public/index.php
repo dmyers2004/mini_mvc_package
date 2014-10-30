@@ -23,6 +23,7 @@ foreach ($packages as $name=>$path) {
 $c = new \dmyers\mvc\container();
 
 $c->config = $c->shared(function($c) { return new \dmyers\mvc\config($c); });
+$c->cache = $c->shared(function($c) { return new \dmyers\mvc\cache($c); });
 $c->app = $c->shared(function($c) { return new \dmyers\mvc\app($c); });
 $c->event = $c->shared(function($c) { return new \dmyers\mvc\event($c); });
 
@@ -36,8 +37,9 @@ $c->session = $c->shared(function($c) { return new \dmyers\mvc\session($c); });
 $c->view = $c->shared(function($c) { return new \dmyers\mvc\view($c); });
 $c->validate = $c->shared(function($c) { return new \dmyers\mvc\validate($c); });
 
-\dmyers\mvc\exceptionHandler::load($c);
+\dmyers\mvc\exceptionHandler::init($c);
 set_exception_handler(['\dmyers\mvc\exceptionHandler','handleException']);
 
 /* route and respond */
-$c->router->route()->output->display();
+$c->app->route()->output();
+
