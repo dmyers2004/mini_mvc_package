@@ -31,7 +31,7 @@ class config extends base {
 
 	/* give me everything! */
 	public function __toString() {
-		return $this->data;
+		return json_encode($this->data);
 	}
 
 	public function __call($name,$arguments) {
