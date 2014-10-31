@@ -5,10 +5,18 @@ use \dmyers\mvc\base;
 
 class view extends base {
 	public function data($name=NULL,$value='#FOOBAR#') {
+		if (is_array($name)) {
+			foreach ($name as $n=>$v) {
+				$this->data($n,$v);
+			}
+			
+			return $this;
+		}
+
 		$return = $this;
 
 		if ($name === NULL) {
-			$return = $this->data();
+			$return = $this->data;
 		} elseif ($value == '#FOOBAR#') {
 			$return = $this->data($name);
 		} else {

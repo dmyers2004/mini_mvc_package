@@ -13,6 +13,7 @@ namespace dmyers\mvc;
 808 access denied
 809 validation error
 810 cache error
+811 theme error
 */
 
 class exceptionHandler {
