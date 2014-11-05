@@ -22,6 +22,13 @@ file_put_contents($to_root.'/application/config/application.php',$content);
 @mkdir($to_root.'/var');
 @mkdir($to_root.'/var/logs',0777);
 @mkdir($to_root.'/var/cache',0777);
+@mkdir($to_root.'/var/misc',0777);
+
+@mkdir($to_root.'/public/assets',0777);
+@mkdir($to_root.'/public/assets/css',0777);
+@mkdir($to_root.'/public/assets/images',0777);
+@mkdir($to_root.'/public/assets/js',0777);
+@mkdir($to_root.'/public/assets/vendor',0777);
 
 echo 'Complete'.chr(10);
 

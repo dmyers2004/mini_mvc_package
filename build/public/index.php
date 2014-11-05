@@ -8,7 +8,7 @@ define('ROOT',realpath(__DIR__.'/../'));
 
 $packages = [
 	''=>'application/',
-	'packages\\'=>'packages/',
+	'plugins\\'=>'packages/plugins/',
 ];
 
 // setup our composer packages and include path for controllers, config, views
