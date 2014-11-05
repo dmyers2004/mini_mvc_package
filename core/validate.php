@@ -141,7 +141,7 @@ class validate extends base {
 		$field = $this->c->input->post($index);
 
 		/* filter post and die on fail */
-		$this->validate->single($rules,$field);
+		$this->validate->single($rules,$field,TRUE);
 
 		return $this; /* allow chaining */
 	}

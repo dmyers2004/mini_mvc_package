@@ -14,6 +14,8 @@ namespace dmyers\mvc;
 809 validation error
 810 cache error
 811 theme error
+812 application path error
+813 page plugin not found
 */
 
 class exceptionHandler {

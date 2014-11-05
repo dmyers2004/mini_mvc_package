@@ -18,7 +18,7 @@ class view extends base {
 		if ($name === NULL) {
 			$return = $this->data;
 		} elseif ($value == '#FOOBAR#') {
-			$return = $this->data($name);
+			$return = $this->data[$name];
 		} else {
 			$this->data[$name] = $value;
 		}
