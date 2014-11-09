@@ -6,10 +6,15 @@ use \dmyers\mvc\base;
 class event extends base {
 
 	public function register($name, $callback) {
-		$key = strtolower((is_array($callback)) ? get_class($callback[0]).'/'.$callback[1] : $callback);
-		$name = strtolower($name);
+		if (is_callable($callback)) {
+			$key = uniqid('callable',TRUE);
+		} elseif (is_array($callback)) {	
+			$key = get_class($callback[0]).'/'.$callback[1];
+		} else {
+			$key = $callback;
+		}
 
-		$this->data[$name][$key] = $callback;
+		$this->data[strtolower($name)][strtolower($key)] = $callback;
 
 		return $this;
 	}
